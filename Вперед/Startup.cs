@@ -32,10 +32,7 @@ namespace Вперед
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-            }
+           
 
             app.UseStaticFiles();
 
