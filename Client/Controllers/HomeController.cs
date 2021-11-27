@@ -1,4 +1,5 @@
-﻿using Client.Models.Security;
+﻿using Client.Models.Chat;
+using Client.Models.Security;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -22,14 +23,19 @@ namespace Client.Controllers
         [HttpPost]
         public IActionResult Index(AuthorizationVm authorization)
         {
-            //return View("Chat");
-            return View("ChatMetanit");
+
+            var model = new ChatVm()
+            {
+                UserName = authorization.Name
+            };
+
+            return View("Chat", model);
         }
 
-        [HttpGet]
-        public IActionResult Chat()
+        [HttpPost]
+        public IActionResult Chat(ChatVm model)
         {
-            return View();
+            return View(model);
         }
 
     }

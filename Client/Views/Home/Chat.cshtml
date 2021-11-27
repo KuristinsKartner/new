@@ -1,30 +1,48 @@
-﻿@model Client.Models.Security.AuthorizationVm
+﻿@model Client.Models.Chat.ChatVm
 
-@using (Html.BeginForm("Index", "Home", FormMethod.Post))
-{
+<div>
+<label>Добро пожаловать, @Model.UserName</label>
+</div>
+<div id="inputForm">
+    <input type="text" id="message" class="border border-dark" />
+    <button type="submit" class="btn btn-primary">Send</button>
+</div>
+<div id="chatroom"></div>
 
-    @*<html xmlns="http://www.w3.org/1999/xhtml">*@
+<script type="text/javascript">
+    //$(document).ready(function () {
+    //    var connection = new signalR.HubConnection('/nlo');
 
-    <div id="wrapper">
-        <div id="menu">
-            <p class="welcome">Welcome, <b></b></p>
-            <p class="logout" asp-controller="Home" asp-action="Index"><a id="exit" href="#">Exit Chat</a></p>
-            <div style="clear:both"></div>
-        </div>
+    //    connection.on('nlo', data => {
+    //        $("#log").append("нло прилетело и оставило это сообщение <br />");
+    //    });
 
-        <div id="chatbox"></div>
+    //    connection.start()
+    //        .then(() => connection.invoke('BroadcastNlo'));
+    //});
+</script>
 
-        <form name="message" action="">
-            <input name="usermsg" type="text" id="usermsg" size="63" />
-            <input name="submitmsg" type="submit" id="submitmsg" value="Send" />
-        </form>
-    </div>
 
-    <script type="text/javascript">
-        // jQuery Document
-        $(document).ready(function () {
+<script src="js/signalr/dist/browser/signalr.min.js"></script>
+<script type="text/javascript">
+    debugger;
+    var hubConnection = new signalR.HubConnectionBuilder()
+            .withUrl("/chat")
+            .build();
+
+        hubConnection.on("Send", function (data) {
+
+            let elem = document.createElement("p");
+            elem.appendChild(document.createTextNode(data));
+            let firstElem = document.getElementById("chatroom").firstChild;
+            document.getElementById("chatroom").insertBefore(elem, firstElem);
 
         });
-    </script>
-    @*</html>*@
-}@{Html.EndForm();}
+
+        document.getElementById("sendBtn").addEventListener("click", function (e) {
+            let message = document.getElementById("message").value;
+            hubConnection.invoke("Send", message);
+        });
+
+        hubConnection.start();
+</script>
