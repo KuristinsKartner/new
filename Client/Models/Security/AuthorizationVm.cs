@@ -8,5 +8,12 @@ namespace Client.Models.Security
     public class AuthorizationVm
     {
         public string Name { get; set; }
+        public void OnPostByName(string name)// обработчик
+        {
+            if (name == null)
+                Name = name;
+            else
+                Name = "noname";
+           }
     }
 }
